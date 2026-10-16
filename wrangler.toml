@@ -1,0 +1,12 @@
+name = "cloudflare-cors-proxy-complete"
+main = "src/index.js"
+compatibility_date = "2026-10-17"
+
+[vars]
+# Change to API hostname(s) you own or are authorized to call.
+ALLOWED_HOSTS = "https://dooballland.com"
+# For production, set the exact origin(s) of your own frontend.
+ALLOWED_ORIGINS = "*"
+# Optional: set a Referer for an API you own/are authorized to call.
+# Example: "https://your-own-site.example/"
+UPSTREAM_REFERER = ""

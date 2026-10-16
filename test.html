@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cloudflare CORS Proxy Tester</title>
+<style>
+body{font:16px system-ui;max-width:800px;margin:30px auto;padding:0 16px;background:#101318;color:#f5f5f5}
+input,button{font:inherit;padding:10px;margin:6px 0;box-sizing:border-box;max-width:100%}
+input{width:100%;border:1px solid #555;border-radius:8px;background:#20242c;color:#fff}
+button{cursor:pointer;border:0;border-radius:8px;padding:11px 18px}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#20242c;padding:14px;border-radius:8px}
+small{color:#bbb}
+</style>
+</head>
+<body>
+<h1>ทดสอบ CORS Proxy</h1>
+<p>ใช้กับ API ที่คุณเป็นเจ้าของหรือได้รับอนุญาตเท่านั้น</p>
+<label>Worker URL</label>
+<input id="worker" placeholder="https://your-worker.workers.dev">
+<label>Target API URL (HTTPS)</label>
+<input id="target" placeholder="https://api.example.com/v1/items">
+<button id="run">ทดสอบ GET</button>
+<pre id="output">ผลลัพธ์จะแสดงที่นี่</pre>
+<small>หากได้ 403 ให้ตรวจค่า ALLOWED_HOSTS ใน Worker Variables</small>
+<script>
+document.getElementById("run").addEventListener("click", async () => {
+  const worker = document.getElementById("worker").value.trim().replace(/\/+$/, "");
+  const target = document.getElementById("target").value.trim();
+  const output = document.getElementById("output");
+  if (!worker || !target) { output.textContent = "กรอก Worker URL และ Target URL ให้ครบ"; return; }
+  output.textContent = "กำลังเรียก...";
+  try {
+    const response = await fetch(`${worker}/api/proxy?url=${encodeURIComponent(target)}`);
+    output.textContent = `HTTP ${response.status}\n${await response.text()}`;
+  } catch (err) {
+    output.textContent = `เรียกไม่สำเร็จ: ${err.message}`;
+  }
+});
+</script>
+</body>
+</html>
